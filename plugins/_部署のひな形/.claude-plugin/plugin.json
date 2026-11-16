@@ -1,0 +1,10 @@
+{
+  "name": "department-template",
+  "displayName": "部署のひな形",
+  "version": "1.0.0",
+  "description": "部署専用の道具を作る時にコピーする型。このフォルダ自体はインストールせず、plugins/<部署名>/ としてコピーしてから内容を書き換えて使う。",
+  "author": {
+    "name": "Template Maintainers"
+  },
+  "license": "MIT"
+}

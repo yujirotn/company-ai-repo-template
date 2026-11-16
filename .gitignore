@@ -1,0 +1,32 @@
+# 秘密・認証情報系（このファイルは絶対に書庫に入れない）
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+*credentials*
+*secret*
+*.p12
+*.pfx
+id_rsa
+id_rsa.*
+id_ed25519
+id_ed25519.*
+.npmrc
+.aws/
+.ssh/
+
+# Claude Code / Codex のローカル個人設定（共有しない）
+.claude/settings.local.json
+.codex/
+
+# OSゴミ
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# エディタ・一時ファイル
+*.log
+*.tmp
+.vscode/
+node_modules/

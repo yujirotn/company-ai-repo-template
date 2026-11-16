@@ -1,0 +1,14 @@
+{
+  "name": "company-ai-repo-template",
+  "description": "会社のAI書庫ひな形に入っている道具（プラグイン）の目録。owner.name は自社名に書き換えて使う。",
+  "owner": {
+    "name": "Template Maintainer"
+  },
+  "plugins": [
+    {
+      "name": "common",
+      "source": "./plugins/common",
+      "description": "全社共通の道具。仕様書から仕事を始めるスキルと、変更を書庫に保存する（コミット・ブランチ・PR）スキルの2本を内包する。"
+    }
+  ]
+}
