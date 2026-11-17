@@ -1,11 +1,15 @@
 {
   "name": "common",
   "displayName": "全社共通",
-  "version": "1.0.0",
-  "description": "全社共通の道具一式。仕様書駆動で仕事を始めるスキル（start-from-spec）と、変更を安全に書庫へ保存するスキル（save-to-archive）の2本を内包する。",
+  "version": "1.1.0",
+  "description": "全社共通の道具一式。仕様書駆動で仕事を始めるスキル（start-from-spec）、変更を安全に書庫へ保存するスキル（save-to-archive）、会社のトンマナで広報物を作るスキル（koho-sakusei）の3本を内包する。",
   "author": {
     "name": "Template Maintainers"
   },
   "license": "MIT",
-  "keywords": ["spec-driven", "onboarding", "git"]
+  "keywords": [
+    "spec-driven",
+    "onboarding",
+    "git"
+  ]
 }
