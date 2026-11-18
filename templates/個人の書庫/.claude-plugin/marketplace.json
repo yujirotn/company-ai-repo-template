@@ -1,0 +1,14 @@
+{
+  "name": "my-ai",
+  "description": "自分だけの道具（スキル）の目録。この書庫は本人専用で、会社の書庫とは別に持つ。",
+  "owner": {
+    "name": "【自分の呼び名】"
+  },
+  "plugins": [
+    {
+      "name": "me",
+      "source": "./plugins/me",
+      "description": "自分だけのスキル。育って他の人にも役立つと分かったら、会社の書庫の plugins/ へ上げる。"
+    }
+  ]
+}

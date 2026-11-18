@@ -1,0 +1,9 @@
+{
+  "name": "me",
+  "displayName": "自分の道具",
+  "version": "0.1.0",
+  "description": "自分だけのスキルを入れる箱。skills/<スキル名>/SKILL.md の形で足していく。",
+  "author": {
+    "name": "【自分の呼び名】"
+  }
+}
