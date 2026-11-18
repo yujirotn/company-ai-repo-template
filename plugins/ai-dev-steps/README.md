@@ -6,7 +6,7 @@ AI と一緒に道具やサービスを作る時の手順を、**1段1スキル*
 
 覚えるのは入口の **`dev-start`** だけです。`docs/` の中を見て、「今どの段か・次に何をするか」を教えてくれます。
 
-Claude Code と Codex のどちらでも使えます（スキルだけでできています）。
+Claude Code と Codex のどちらでもスキルを使えます。Claude Code には、仕様とコードを読む点検役も同梱しています。
 
 ## 全体の図
 
@@ -28,9 +28,9 @@ Claude Code と Codex のどちらでも使えます（スキルだけででき�
 | 6 | 完成条件を先に決め、別の AI に厳しく点検させる | 1部屋ずつ施工して検査 | `dev-build` | 本番のコード・`docs/04-完成条件.md`・`docs/reviews/` |
 | 7 | 費用と利益の試算・プランの配分・値段の感じ方 | 見積もり | `dev-pricing` | `docs/06-価格.md` |
 | 8 | 雰囲気の見本 → 決まり → 画面 | 内装・外観 | `dev-design` | 会社の `DESIGN.md` を当てる（無ければ `docs/デザイン.md`。会社の決まりは書き換えない） |
-| 9 | 自分の練習環境だけを、別の AI に攻めさせて直す | 防犯の点検 | `dev-attack` | `docs/reviews/攻撃-<日付>.md` |
+| 9 | 攻める側の目で仕様とコードを読み、守りを直す | 防犯の点検 | `dev-attack` | `docs/reviews/攻撃-<日付>.md` |
 
-`docs/` の場所は、書庫に `projects/` があれば `projects/<仕事の名前>/docs/`、無ければ今のフォルダの `docs/` です。仕事のフォルダの入口は `README.md` で、今の段・進み具合・最近の動き（履歴）を各スキルが書き足していきます。試作は `prototype/`、本番は `app/` に置きます。仕事の名前は、段1で自分で日本語で付けます（例: `projects/備品の貸し出し記録/docs/`）。
+仕事の場所を指定した場合は、各スキルはそこを使います。新しい仕事は、段1で日本語の名前を付けて書庫の `projects/<仕事の名前>/` に作ります（例: `projects/備品の貸し出し記録/`）。その仕事の入口は `README.md` です。各スキルが今の段・進み具合・最近の動きを書き足します。仕様は `docs/`、試作は `prototype/`、本番は `app/` に置きます。
 
 ### 社内で使う道具なら、5 と 7 は飛ばす
 
@@ -44,7 +44,7 @@ Claude Code と Codex のどちらでも使えます（スキルだけででき�
 - **分からないことは作らずに聞く**。1問ずつ、AI の推奨を添えて聞く
 - **鍵（パスワード・API キー・トークン・.env の中身）を docs にもコードにも書かない**。書くのは「どこに置いたか」だけ
 - **段の終わりは、本人の OK が出るまで次へ進まない**。方向を変えたい時は、その段か前の段の docs から直す
-- **攻撃（段9）は、自分で作った道具を、自分の練習環境でだけ**。最初に必ず確かめる
+- **段9の点検役は仕様とコードを読む**。読む点検だけの進み具合は「一部（読む点検のみ）」です
 
 ## 入れ方
 
@@ -70,12 +70,14 @@ codex plugin add ai-dev-steps@company-ai-repo-template
 
 ## 呼び方
 
-| | 呼び方 | 例 |
+| 置き方 | Claude Code | Codex |
 |---|---|---|
-| Claude Code | `/ai-dev-steps:<スキル名>`、または言葉で頼む | `/ai-dev-steps:dev-start`／「新しい道具を作りたい。次は何をすればいい？」 |
-| Codex | `$ai-dev-steps:<スキル名>`、または言葉で頼む | `$ai-dev-steps:dev-start`／「dev-start で今の段を教えて」 |
+| プラグインとして入れた場合 | `/ai-dev-steps:dev-start` | `$ai-dev-steps:dev-start` |
+| スキルを直接置いた場合 | `.claude/skills/` に置いて `/dev-start` | `.agents/skills/` に置いて `$dev-start` |
 
-どちらも、言葉で頼めば合うスキルを AI が選びます。迷ったら「dev-start で、今どの段か教えて」と頼んでください。
+次の段も同じ形式で、`dev-start` をその段のスキル名に替えて呼びます。「dev-start で、今どの段か教えて」と言葉で頼むこともできます。
+
+書庫の親フォルダで開くと、子フォルダに直接置いたスキルが見つからないことがあります。対象の書庫か仕事のフォルダで新しく開くか、同梱の `plugins/ai-dev-steps/skills/dev-start/SKILL.md` のパスを示して「この手順で進めて」と頼んでください。
 
 ## ほかの道具との関係
 
@@ -83,7 +85,7 @@ codex plugin add ai-dev-steps@company-ai-repo-template
   - `grill`（1問ずつ詰める）・`ux-review`・`design-review`・`visual-design`（見本の道具箱に入っている場合）
   - Claude Code の公式プラグイン `feature-dev`・`code-review`・`frontend-design`・`security-guidance`・`claude-security`、組み込みの `/code-review`・`/security-review`
   - Codex の `codex-security`
-- 段6と段9の「別の目」は、専用の点検役の部品を使わず、**新しい AI を起こして読ませる**やり方で書いてあります。Claude Code ならサブエージェント、Codex ならサブエージェントか新しい `codex exec`、どちらでも新しい会話に依頼文を貼れば同じことができます
+- 段6と段9では、Claude Code は同梱の点検役、Codex は利用できる場合に組み込みのサブエージェントを使います。同梱の点検役やサブエージェントを使えない場合は、各スキルの依頼文で別の AI に読む点検を頼めます
 
 ## 中身
 
@@ -92,6 +94,10 @@ ai-dev-steps/
   .claude-plugin/plugin.json
   README.md            この説明
   NOTICE.md            考え方を借りた元の一覧
+  agents/              Claude Code 用の読む点検役
+    build-reviewer.md    段6 作りを見る
+    security-reviewer.md 段6 守りを見る
+    attacker.md          段9 攻める側の目で守りを見る
   skills/
     dev-start/         入口
     dev-concept/       1 コンセプト
