@@ -1,8 +1,8 @@
 {
   "name": "sho-san",
   "displayName": "SHO-SAN の道具（見本）",
-  "version": "1.2.0",
-  "description": "「SHO-SAN ではこう使っている」の見本。仕事の進め方（grill・handoff・nihongo・org-rebuild・proposal-duplication・tech-doc）、資料作成（visual-design・explain-visual・slide-deck-create・stack-diagram）、画面づくり（ux-review・design-review・web-preflight）の13本を内包する。どれも汎用に書き直してあり、見た目は DESIGN.md、置き場所は CLAUDE.md に従う。要らなければ marketplace.json から外してよい。",
+  "version": "1.3.0",
+  "description": "「SHO-SAN ではこう使っている」の見本。仕事の進め方（grill・handoff・nihongo・org-rebuild・proposal-duplication）、資料作成（visual-design・explain-visual・slide-deck-create・doc-kit・stack-diagram）、画面づくり（ux-review・design-review・web-preflight）の14本を内包する。どれも汎用に書き直してあり、見た目は DESIGN.md、置き場所は CLAUDE.md に従う。要らなければ marketplace.json から外してよい。",
   "author": {
     "name": "SHO-SAN"
   },
