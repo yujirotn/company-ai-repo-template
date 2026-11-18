@@ -1,0 +1,24 @@
+{
+  "_説明": "会社ごとにこのファイルをコピーして直す。rules は上から順に最初に一致したものを使う。行き先が新しいパスなら、重いものは自動で保存先（DRIVE）へ回る。どれにも一致しないものは ARCHIVE。下の rules は架空の例。",
+  "source": "/path/to/古い環境",
+  "skip": [".git", "node_modules", ".venv", "__pycache__", ".DS_Store", ".env"],
+  "rules": [
+    ["営業/古い提案", "DROP"],
+    [".claude", "KEEP"],
+    ["CLAUDE.md", "KEEP"],
+    ["案件/A邸", "projects/A邸"],
+    ["案件/B邸", "projects/B邸"],
+    ["営業/見積の型", "plugins/eigyo/見積の型"],
+    ["社内/マニュアル", "docs/マニュアル"]
+  ],
+  "heavy_ext": [
+    "mp4", "mov", "m4v", "webm", "m4a", "wav", "mp3",
+    "png", "jpg", "jpeg", "gif", "webp", "heic", "psd", "ai",
+    "pdf", "pptx", "ppt", "key", "docx", "doc", "xlsx", "xls",
+    "zip", "tar", "gz", "7z", "dmg",
+    "dxf", "dwg", "glb", "gltf", "obj", "fbx", "blend", "blend1", "skp",
+    "drawio", "ttf", "otf", "woff", "woff2"
+  ],
+  "text_limit": 1000000,
+  "any_limit": 5000000
+}

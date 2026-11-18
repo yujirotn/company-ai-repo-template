@@ -13,7 +13,7 @@
     {
       "name": "sho-san",
       "source": "./plugins/sho-san",
-      "description": "「SHO-SAN ではこう使っている」の見本。計画を1問ずつ詰める grill、引き継ぎを README に残す handoff、人に出す日本語を整える nihongo の3本。要らなければこの行とフォルダを消してよい。"
+      "description": "「SHO-SAN ではこう使っている」の見本。計画を1問ずつ詰める grill、引き継ぎを README に残す handoff、人に出す日本語を整える nihongo、AI の作業環境を点検して作り直す org-rebuild の4本。要らなければこの行とフォルダを消してよい。"
     }
   ]
 }

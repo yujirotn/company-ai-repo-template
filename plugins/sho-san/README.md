@@ -11,6 +11,7 @@
 | `/sho-san:grill` | 計画・設計・決めごとを、共通理解に達するまで1問ずつ詰める。各質問にAIの推奨を添える | 「この計画を詰めて」「グリルして」 |
 | `/sho-san:handoff` | 作業の区切りで README に「最近の動き」「未解決事項」を残し、次の会話に貼れる「再開の文」を出す | 「引き継ぎを残して」「今日はここまで」 |
 | `/sho-san:nihongo` | メール・お知らせ・提案書・スライド・README など、人に出す日本語を自然に整える | 「この文を nihongo で直して」 |
+| `/sho-san:org-rebuild` | AI の作業環境（ハーネス）を、点検 → グリル（決定木を1問ずつ）→ 移行 → 再点検の流れで作り直す。30分版もある | 「AI の環境を作り直したい」「組織づくりを30分版で」 |
 
 ## インストール
 
@@ -28,6 +29,7 @@ Codex でも `codex plugin marketplace add ./` → `codex plugin add sho-san@com
 |---|---|---|
 | `grill` | Matt Pocock の `grilling` / `grill-me`（https://github.com/mattpocock/skills）を日本語の現場向けに書き直した | MIT（`skills/grill/LICENSE`） |
 | `handoff` | SHO-SAN の社内スキルを汎用に書き直した | MIT（この書庫の `LICENSE`） |
+| `org-rebuild` | SHO-SAN の社内スキルを汎用に書き直した。点検には公開の道具 [harness-check](https://github.com/yujirotn/harness-check) を使う | MIT（この書庫の `LICENSE`） |
 | `nihongo` | AnIT012 の `nihongo`（https://github.com/AnIT012/nihongo）v2.1.2 を取り込み、説明文だけ絞った | MIT（`skills/nihongo/LICENSE`。変えた所は `skills/nihongo/UPSTREAM.md`） |
 
 原典があるスキルを自社用に直す時も、`LICENSE` と出典の表記は消さずに残してください。
