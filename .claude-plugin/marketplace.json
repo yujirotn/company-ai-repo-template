@@ -9,6 +9,11 @@
       "name": "common",
       "source": "./plugins/common",
       "description": "全社共通の道具。仕様書から仕事を始めるスキル、変更を書庫に保存する（コミット・ブランチ・PR）スキル、会社のトンマナで広報物を作るスキルの3本を内包する。"
+    },
+    {
+      "name": "sho-san",
+      "source": "./plugins/sho-san",
+      "description": "「SHO-SAN ではこう使っている」の見本。計画を1問ずつ詰める grill、引き継ぎを README に残す handoff、人に出す日本語を整える nihongo の3本。要らなければこの行とフォルダを消してよい。"
     }
   ]
 }

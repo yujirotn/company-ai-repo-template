@@ -1,0 +1,15 @@
+{
+  "name": "sho-san",
+  "displayName": "SHO-SAN の道具（見本）",
+  "version": "1.0.0",
+  "description": "「SHO-SAN ではこう使っている」の見本。計画を1問ずつ詰める grill、引き継ぎを README に残す handoff、人に出す日本語を整える nihongo の3本を内包する。自社の道具を作る時の参考にし、要らなければ marketplace.json から外してよい。",
+  "author": {
+    "name": "SHO-SAN"
+  },
+  "license": "MIT",
+  "keywords": [
+    "planning",
+    "handoff",
+    "japanese-writing"
+  ]
+}
