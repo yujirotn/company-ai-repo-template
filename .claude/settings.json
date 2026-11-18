@@ -1,0 +1,52 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "hooks": {
+    "SessionStart": [
+      {
+        "matcher": "startup",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/pull-latest.sh\"",
+            "timeout": 30
+          }
+        ]
+      }
+    ]
+  },
+  "extraKnownMarketplaces": {
+    "company-ai-repo-template": {
+      "source": {
+        "source": "directory",
+        "path": "./"
+      }
+    }
+  },
+  "enabledPlugins": {
+    "common@company-ai-repo-template": true
+  },
+  "permissions": {
+    "deny": [
+      "Read(.env)",
+      "Read(.env.*)",
+      "Read(*.pem)",
+      "Read(*.key)",
+      "Read(*credentials*)",
+      "Read(*secret*)",
+      "Read(id_rsa)",
+      "Read(id_rsa.*)",
+      "Read(id_ed25519)",
+      "Read(id_ed25519.*)",
+      "Read(.npmrc)",
+      "Read(secrets/**)",
+      "Read(.aws/**)",
+      "Read(.ssh/**)",
+      "Bash(rm -rf *)",
+      "Bash(rm -rf*)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(curl *)",
+      "Bash(wget *)"
+    ]
+  }
+}

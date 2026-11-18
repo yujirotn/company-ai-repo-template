@@ -6,6 +6,68 @@
 ここに入っているのは実際の仕事の内容ではなく、**置き場所のルールと、最小限の道具（スキル）と、その見本**だけです。
 会社の仕事が増えるたびに、このルールに沿ってフォルダや道具を足していきます。
 
+## 0. 最初にやること（メンバー全員）
+
+会社の書庫は、GitHub に1つだけ置き、全員がそれを自分のパソコンに取ってきて（クローン）使います。
+**書庫を開くたびに、AIが GitHub から最新を取ってきて、会社の道具（`plugins/`）もそのまま使える**ようにしてあります。
+だれかが決まりや道具を直して取り込めば、次に開いた時に全員の手元へ届きます。
+
+### 0-1. 書庫を自分のパソコンに取ってくる（1回だけ）
+
+ターミナル（文字で命令を打つ画面）で、次を実行します。`<組織名>/<書庫の名前>` は管理者から聞いてください。
+
+```bash
+gh auth login                              # GitHub にログイン（まだなら。画面の案内に従う）
+gh repo clone <組織名>/<書庫の名前>          # 書庫を取ってくる（git clone と同じ）
+cd <書庫の名前>                              # 取ってきたフォルダに入る
+```
+
+### 0-2. そのフォルダで AI を開く
+
+**必ず、取ってきた書庫のフォルダの中で** AI を起動します（別の場所で開くと、書庫の決まりも道具も効きません）。
+
+```bash
+claude      # Claude Code の場合
+codex       # Codex の場合
+```
+
+初めて開いた時だけ、確認が出ます。
+
+| AI | 出る確認 | 答え方 |
+|---|---|---|
+| Claude Code | 「このフォルダを信頼しますか（Do you trust the files in this folder?）」 | 「信頼する（Yes）」を選ぶ。これで、開くたびに最新を取ってくる仕組みと、会社の道具（`common`）が有効になる |
+| Codex | 「このフォルダを信頼しますか」と、続けて「Hooks need review（自動で動く命令の確認）」 | フォルダを信頼したあと、`1. Review hooks` で中身が `scripts/pull-latest.sh` を動かすだけであることを確かめ、信頼する（`2. Trust all and continue` でも同じ）。中身が変わった時は、また確認が出る |
+
+**Claude Code は、初めて開いた時は一度閉じて（`/exit`）開き直してください。** 1回目の起動で書庫が「道具の目録」として登録され、
+2回目の起動から会社の道具（`/common:...`）が使えるようになります（2026-11-18 に実機で確認）。
+
+### 0-3. 連動しているかを確かめる
+
+開いたら、次の3つを確かめます。
+
+1. **最新を取ってきたかの一言が出る**: 開いた直後に、`【書庫の同期】最新を取ってきました` か `【書庫の同期】この書庫は最新です` の一言が出る
+   （Claude Code は画面に表示。Codex は AI が最初の返事で伝える）。出ない時は、AI に「書庫の最新を取ってきて」と頼む
+2. **書庫の決まりを読んでいる**: AI に「この書庫の決まりを3行で教えて」と聞く。
+   「秘密を入れない・本番を触らない・作る前に仕様書・分からなければ聞く」の趣旨が返ってくれば、`CLAUDE.md` / `AGENTS.md` が効いている
+3. **会社の道具が見える**（Claude Code）: `/common` と打つと `/common:start-from-spec` などの候補が出る。
+   または `/plugin` を開き、`common@company-ai-repo-template` が入っていることを確かめる
+
+### 0-4. 「最新を取ってくる」一言の意味
+
+書庫を開くたびに、`scripts/pull-latest.sh` が静かに動きます。**危ない操作（手元の変更を消す・履歴を書き換える）は一切しません。**
+早送りで取り込める時だけ取り込み、それ以外は何も変えずに一言だけ出します。
+
+| 出る一言 | 意味と、やること |
+|---|---|
+| 最新を取ってきました | GitHub の更新を取り込んだ。そのまま作業してよい。「会社の道具も新しくなりました」と出たら、Claude Code では `/reload-plugins` を実行 |
+| この書庫は最新です | 何もしなくてよい |
+| 手元に保存（コミット）していない変更があるため、見送りました | 自分の作業が残っている。AI に「書庫に保存して」と頼んでから開き直す |
+| 手元と GitHub の記録が分かれているため、自動では取り込みませんでした | 自分の保存と他の人の更新がすれ違っている。AI に「安全な直し方を教えて」と相談する（自分で消したりしない） |
+| GitHub につながらず、確かめられませんでした | インターネットか GitHub のログイン（`gh auth status`）を確かめる。手元の内容のままなら作業はできる |
+| 枝「…」はまだ GitHub とつながっていない | 自分で作った作業用の枝（ブランチ）にいる。問題なし |
+
+手で動かすこともできます: `bash scripts/pull-latest.sh --text`
+
 ## 1. 全体の地図
 
 ```
@@ -15,6 +77,12 @@ company-ai-repo-template/
 ├── README.md                 … このファイル（人が読む使い方）
 ├── .claude-plugin/
 │   └── marketplace.json      … このリポジトリに入っている「道具一式（プラグイン）」の目録
+├── .claude/
+│   └── settings.json         … Claude Code で開いた時の設定（最新を取ってくる・会社の道具を有効にする・安全の守り）
+├── .codex/
+│   └── hooks.json            … Codex で開いた時に最新を取ってくる設定（.codex/ のうち、これだけを共有する）
+├── scripts/
+│   └── pull-latest.sh        … 書庫を開いた時に GitHub から最新を取ってくる小さな仕組み（危ない操作はしない）
 ├── plugins/
 │   ├── common/                … 全社共通の道具（仕様書から始める・書庫に保存する・広報物を作る）
 │   ├── sho-san/               … 見本の道具（「SHO-SAN ではこう使っている」。計画を詰める・引き継ぐ・日本語を整える・AI の作業環境を作り直す）
@@ -52,29 +120,78 @@ company-ai-repo-template/
    （下の「置き場所の3段」を参照。手で作る場合は `members/_ひな形/` と `templates/個人の書庫/` をコピーする）
 6. `DESIGN.md` の【　】を埋める（会社の色・書体・言葉づかい）。AIに「DESIGN.md を1問ずつ聞いて埋めて」と頼めば、
    聞き役になって埋めてくれる
+7. メンバーに、書庫の場所（`<組織名>/<書庫の名前>`）と、上の「0. 最初にやること」を伝える。
+   メンバーを GitHub の組織に招待し、書庫を読める・書ける権限を付ける
+8. （推奨）`main` に「レビュー必須」の保護ルールを掛ける（GitHub の Settings → Branches）。
+   全員の手元に自動で届く書庫なので、取り込む前に必ず1人が確かめる形にしておく
 
-## 3. Claude Code で使う（インストール）
+**目録の名前を変える時の注意**: `.claude-plugin/marketplace.json` の `"name"`（最初は `company-ai-repo-template`）を
+自社の名前に変えた場合は、`.claude/settings.json` の `extraKnownMarketplaces` の名前と、
+`enabledPlugins` の `@` の後ろも、同じ名前に揃えてください（揃っていないと、会社の道具が届きません）。
 
-このリポジトリを手元に取ってきたら（git clone。「取ってくる」の意味は後述）、ターミナルで次を実行します。
+## 3. Claude Code で使う（会社の道具が届く仕組み）
 
-```bash
-# 1. この書庫を「道具の目録（マーケットプレース）」として登録する
-claude plugin marketplace add ./company-ai-repo-template
+**手でインストールしなくても、書庫のフォルダで Claude Code を開けば、会社共通の道具（`common`）が使えます。**
+`.claude/settings.json` に次の2つを書いてあるからです（Claude Code の公式の仕組み。`extraKnownMarketplaces` と `enabledPlugins`）。
 
-# 2. 全社共通の道具（common）をインストールする
-claude plugin install common@company-ai-repo-template
-
-# （任意）見本の道具（sho-san）もインストールする
-claude plugin install sho-san@company-ai-repo-template
-
-# 3. インストールされたか確認する
-claude plugin list
+```json
+"extraKnownMarketplaces": {
+  "company-ai-repo-template": { "source": { "source": "directory", "path": "./" } }
+},
+"enabledPlugins": {
+  "common@company-ai-repo-template": true
+}
 ```
 
-Claude Codeのセッション内であれば、`/plugin marketplace add ./company-ai-repo-template` と
-`/plugin install common@company-ai-repo-template` でも同じことができます。
+- `extraKnownMarketplaces`: 「この書庫そのものを、道具の目録（マーケットプレース）として使う」という指定。
+  `"path": "./"` は書庫の一番上を指す（取ってきた場所がどこでも、各自の書庫のフォルダに読み替わる。実機で確認）
+- `enabledPlugins`: 「その目録のうち `common` を、この書庫では全員オンにする」という指定
+- フォルダを「信頼する」と答えた後にだけ効きます（信頼していないフォルダでは、Claude Code はこの指定を無視します）
 
-インストールが終わると、Claude Codeの中で次のスキルが使えるようになります。
+**道具の更新は、書庫の更新と同じです。** 道具は書庫のフォルダから直接読み込まれるので、開いた時に最新を取ってくれば
+（0-4 の仕組み）、道具も最新になります。会話の途中で取り込んだ時は `/reload-plugins` で今の会話にも反映されます。
+このため、この使い方では「自動更新」の設定は要りません。
+
+**部署の道具や見本（`sho-san`）も、全員にオンにしたい時**は、`enabledPlugins` に行を足して、プルリクエストで取り込みます。
+
+```json
+"enabledPlugins": {
+  "common@company-ai-repo-template": true,
+  "sho-san@company-ai-repo-template": true
+}
+```
+
+個人で足したい時は、Claude Code の中で `/plugin install sho-san@company-ai-repo-template` を実行します。
+
+### 書庫の外（ほかのフォルダ）でも会社の道具を使いたい時
+
+書庫以外のフォルダで作業する時にも会社の道具を使いたい人は、GitHub の書庫を目録として自分のパソコンに登録します。
+この場合は GitHub から写しを取ってくる方式になるので、**自動更新をオンにします**（社外の目録は、最初は自動更新がオフです）。
+
+```bash
+claude plugin marketplace add <組織名>/<書庫の名前>                 # GitHub の書庫を目録として登録
+claude plugin install common@company-ai-repo-template --scope user  # 自分のパソコン全体で使う
+```
+
+自動更新のオンは、次のどちらかで行います（Claude Code 公式の方法）。
+
+- Claude Code の中で `/plugin` を開き、**Marketplaces** の画面で `company-ai-repo-template` を選び、**Enable auto-update** を選ぶ
+- または、自分の設定ファイル（`~/.claude/settings.json`）の目録の指定に `"autoUpdate": true` を書く
+
+```json
+"extraKnownMarketplaces": {
+  "company-ai-repo-template": {
+    "source": { "source": "github", "repo": "<組織名>/<書庫の名前>" },
+    "autoUpdate": true
+  }
+}
+```
+
+自動更新は、起動してから少し後（最大10分ほど）に裏で行われ、「Plugin updated … Run /reload-plugins to apply」と出たら反映できます。
+`DISABLE_AUTOUPDATER=1` などで Claude Code の自動更新を止めているパソコンでは、`FORCE_AUTOUPDATE_PLUGINS=1` も合わせて設定しないと動きません。
+手で更新する時は `claude plugin marketplace update company-ai-repo-template` を実行します。
+
+書庫で開いた時（または上のインストールの後）、Claude Codeの中で次のスキルが使えるようになります（`sho-san` は、オンにした場合だけ）。
 
 | スキルの呼び方（コマンド） | やること |
 |---|---|
@@ -122,6 +239,16 @@ AIは、広報物・資料・スライド・画面の見た目や文言を作る
 ## 6. Codex で使う
 
 Codex（OpenAIのAIコーディングツール）は `AGENTS.md` を読みます。内容は `CLAUDE.md` と同じものです。
+
+**開いた時に最新を取ってくる仕組み**は、Codex の公式のフック（`.codex/hooks.json` の `SessionStart`）で、
+Claude Code と同じ `scripts/pull-latest.sh` を動かしています。Codex では、次の2つの確認を通った後にだけ動きます。
+
+1. そのフォルダを「信頼する」と答える（信頼していないフォルダでは `.codex/` の設定は読まれない）
+2. 起動時に出る「Hooks need review」で、フックの中身を確かめて信頼する（`/hooks` からも確かめられる）。
+   `.codex/hooks.json` を書き換えると、もう一度確認が出る
+
+信頼しなかった場合でも、`AGENTS.md` に「作業の前に `bash scripts/pull-latest.sh --text` を実行する」と書いてあるので、
+AI が作業の前に最新を取ってきます。
 Codex独自の「プラグインの目録」の仕組み（`codex plugin marketplace add ./`）は、スキルだけのプラグインなら
 Claude Codeの目録ファイルをそのまま読めることを確かめています。フック・MCPを使うプラグインは未確認です
 （`docs/運用ルール.md` の「検証ログ」を参照）。
@@ -129,8 +256,8 @@ Codexでの安全設定のかけ方は `templates/codex-config.md` を参照し�
 
 ## 7. 安全のための設定（最初からかけておくもの）
 
-`templates/settings.json` を、自分の書庫の `.claude/settings.json` としてコピーして使います。
-次を防ぐための最低限の設定です。
+この書庫の `.claude/settings.json` には、最初から次の守りが入っています（`templates/settings.json` は、同じ守りだけを
+別の書庫にも入れたい時に使う写しです）。次を防ぐための最低限の設定です。
 
 - `.env`・鍵ファイル（`*.key` `*.pem` など）・認証情報ファイルをAIに読ませない
 - `rm -rf`（全部まとめて消す、取り消せない削除コマンド）を実行させない

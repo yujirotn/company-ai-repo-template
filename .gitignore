@@ -18,7 +18,9 @@ id_ed25519.*
 
 # Claude Code / Codex のローカル個人設定（共有しない）
 .claude/settings.local.json
-.codex/
+# .codex/ は個人設定が入るので共有しない。ただし「開いた時に最新を取ってくる」フック（hooks.json）だけは全員で共有する
+.codex/*
+!.codex/hooks.json
 
 # OSゴミ
 .DS_Store
