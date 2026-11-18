@@ -49,7 +49,7 @@ codex       # Codex の場合
    （Claude Code は画面に表示。Codex は AI が最初の返事で伝える）。出ない時は、AI に「書庫の最新を取ってきて」と頼む
 2. **書庫の決まりを読んでいる**: AI に「この書庫の決まりを3行で教えて」と聞く。
    「秘密を入れない・本番を触らない・作る前に仕様書・分からなければ聞く」の趣旨が返ってくれば、`CLAUDE.md` / `AGENTS.md` が効いている
-3. **会社の道具が見える**（Claude Code）: `/common` と打つと `/common:start-from-spec` などの候補が出る。
+3. **会社の道具が見える**（Claude Code）: `/common` と打つと `/common:save-to-archive` などの候補が出る。
    または `/plugin` を開き、`common@company-ai-repo-template` が入っていることを確かめる
 
 ### 0-4. 「最新を取ってくる」一言の意味
@@ -87,14 +87,14 @@ company-ai-repo-template/
 │   ├── pull-latest.sh        … 書庫を開いた時に GitHub から最新を取ってくる小さな仕組み（危ない操作はしない）
 │   └── guardrail.py          … 危ない操作を動く直前に止める見張り番（Claude Code・Codex 共通。止める理由を日本語で出す）
 ├── plugins/
-│   ├── common/                … 全社共通の道具（仕様書から始める・書庫に保存する・広報物を作る）
+│   ├── common/                … 全社共通の道具（書庫に保存する・広報物を作る）
 │   ├── sho-san/               … 見本の道具13本（「SHO-SAN ではこう使っている」。仕事の進め方・資料作成・画面づくり）
 │   ├── ai-dev-steps/          … 開発の手順 1〜9 を1段1スキルで進める道具（入口は dev-start）
 │   └── _部署のひな形/          … 部署用の道具を作るときに複製する型
 ├── members/
 │   └── _ひな形/                … メンバーの名札（個人の書庫の場所・見せたい試作）を作るときに複製する型
 ├── projects/
-│   └── _ひな形/docs/           … 新しい仕事（プロジェクト）を始めるときに複製する、4つの仕様書の空の型
+│   └── README.md               … 仕事ごとのフォルダの置き方（作り方は ai-dev-steps に従う）
 ├── templates/
 │   ├── settings.json          … Claude Code の安全設定（秘密ファイルを読ませない等）
 │   ├── codex-config.md        … Codexに同じ守りをかける方法の説明
@@ -200,7 +200,6 @@ claude plugin install common@company-ai-repo-template --scope user  # 自分の�
 
 | スキルの呼び方（コマンド） | やること |
 |---|---|
-| `/common:start-from-spec` | 新しい仕事の「4つの仕様書」を、聞き役になって一緒に埋める |
 | `/common:save-to-archive` | 変更をコミット・ブランチ・プルリクエストまで案内する（本体に直接保存しない） |
 | `/common:koho-sakusei` | 会社のデザインの決まり（`DESIGN.md`）どおりに広報物を作る |
 | `/sho-san:grill` | 計画・設計・決めごとを、共通理解に達するまで1問ずつ詰める（推奨つき） |
@@ -280,14 +279,11 @@ Codexでの安全設定は、この書庫の `.codex/config.toml`・`.codex/rule
 ## 8. 新しい仕事を始める時の手順（仕様書駆動）
 
 後から機能を足すと、作りが歪みます（「違法建築」と同じ）。だから**先に図面（仕様）を描く**手順にしています。
+手順は開発の手順の道具 `ai-dev-steps` に入っています。
 
-1. `projects/_ひな形/docs/` を `projects/<仕事の名前>/docs/` としてコピーする
-2. `/common:start-from-spec` を呼んで、聞き役のAIと一緒に4つの仕様書を埋める
-   - `01-要件.md`: 誰が何を見て、何を決めるか／誰が見てよいか
-   - `02-画面.md`: 画面の絵（間取り図）
-   - `03-データ.md`: データの出どころと、接続キーの置き場所（書庫には入れない）
-   - `04-完成条件.md`: 何ができたら完成か（守りの条件を含む）
-3. 仕様書ができたら、小さく作る→確かめる、を繰り返す
+1. AI に「新しい道具を作りたい。dev-start で今どの段か教えて」と頼む（Claude Code は `/ai-dev-steps:dev-start`、Codex は `$ai-dev-steps:dev-start`）
+2. 段1で仕事の名前を日本語で付けると、`projects/<仕事の名前>/` ができる。入口の `README.md` に、今の段・進み具合・最近の動きが残っていく
+3. あとは AI の質問に1問ずつ答え、できた docs を見て「OK」と言うと次の段へ進む。社内で使う道具なら、5 価値の検証・7 価格は飛ばす
 4. 変更は `/common:save-to-archive` で、コミット→ブランチ→プルリクエストの手順に乗せる
    （本体＝`main`に直接保存しない）
 

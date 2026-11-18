@@ -2,7 +2,7 @@
   "name": "common",
   "displayName": "全社共通",
   "version": "1.2.0",
-  "description": "全社共通の道具一式。仕様書駆動で仕事を始めるスキル（start-from-spec）、変更を安全に書庫へ保存するスキル（save-to-archive）、会社のトンマナで広報物を作るスキル（koho-sakusei）の3本を内包する。",
+  "description": "全社共通の道具一式。変更を安全に書庫へ保存するスキル（save-to-archive）と、会社のトンマナで広報物を作るスキル（koho-sakusei）の2本を内包する。仕事を始める時の手順は ai-dev-steps に従う。",
   "author": {
     "name": "Template Maintainers"
   },

@@ -30,7 +30,7 @@ Claude Code と Codex のどちらでも使えます（スキルだけででき�
 | 8 | 雰囲気の見本 → 決まり → 画面 | 内装・外観 | `dev-design` | 書庫の一番上の `DESIGN.md` |
 | 9 | 自分の練習環境だけを、別の AI に攻めさせて直す | 防犯の点検 | `dev-attack` | `docs/reviews/攻撃-<日付>.md` |
 
-`docs/` の場所は、書庫に `projects/` があれば `projects/<仕事の名前>/docs/`、無ければ今のフォルダの `docs/` です。仕事の名前は、段1で自分で日本語で付けます（例: `projects/備品の貸し出し記録/docs/`）。
+`docs/` の場所は、書庫に `projects/` があれば `projects/<仕事の名前>/docs/`、無ければ今のフォルダの `docs/` です。仕事のフォルダの入口は `README.md` で、今の段・進み具合・最近の動き（履歴）を各スキルが書き足していきます。試作は `prototype/`、本番は `app/` に置きます。仕事の名前は、段1で自分で日本語で付けます（例: `projects/備品の貸し出し記録/docs/`）。
 
 ### 社内で使う道具なら、5 と 7 は飛ばす
 
@@ -78,7 +78,6 @@ codex plugin add ai-dev-steps@company-ai-repo-template
 
 ## ほかの道具との関係
 
-- **全社共通の `start-from-spec`**（4枚の仕様書を一気に埋める短い道）と、同じ `docs/` の見出しを使っています。どちらで作った docs も、もう一方でそのまま続けられます
 - **入っていれば使う・無くても回る**もの:
   - `grill`（1問ずつ詰める）・`ux-review`・`design-review`・`visual-design`（見本の道具箱に入っている場合）
   - Claude Code の公式プラグイン `feature-dev`・`code-review`・`frontend-design`・`security-guidance`・`claude-security`、組み込みの `/code-review`・`/security-review`
