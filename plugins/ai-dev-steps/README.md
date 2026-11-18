@@ -30,7 +30,7 @@ Claude Code と Codex のどちらでも使えます（スキルだけででき�
 | 8 | 雰囲気の見本 → 決まり → 画面 | 内装・外観 | `dev-design` | 書庫の一番上の `DESIGN.md` |
 | 9 | 自分の練習環境だけを、別の AI に攻めさせて直す | 防犯の点検 | `dev-attack` | `docs/reviews/攻撃-<日付>.md` |
 
-`docs/` の場所は、書庫に `projects/` があれば `projects/<仕事の名前>/docs/`、無ければ今のフォルダの `docs/` です。
+`docs/` の場所は、書庫に `projects/` があれば `projects/<仕事の名前>/docs/`、無ければ今のフォルダの `docs/` です。仕事の名前は、段1で自分で日本語で付けます（例: `projects/備品の貸し出し記録/docs/`）。
 
 ### 社内で使う道具なら、5 と 7 は飛ばす
 
