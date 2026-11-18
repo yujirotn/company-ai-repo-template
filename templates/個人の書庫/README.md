@@ -24,4 +24,6 @@
    claude plugin install me@my-ai
    ```
    Codex なら `codex plugin marketplace add ./<自分の呼び名>-ai` → `codex plugin add me@my-ai`
-3. スキルを足したり直したりしたら、`claude plugin marketplace update my-ai` で取り込み直す
+3. スキルを足したり直したりした時:
+   - Claude Code は手元のフォルダを直接読むので、次に Claude Code を起動した時から効く
+   - Codex は写しを取って使うので、`codex plugin add me@my-ai` をもう一度実行して取り込み直す
