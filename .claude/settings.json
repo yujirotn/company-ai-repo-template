@@ -1,5 +1,77 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "permissions": {
+    "defaultMode": "default",
+    "disableBypassPermissionsMode": "disable",
+    "deny": [
+      "Read(**/.env)",
+      "Read(**/.env.local)",
+      "Read(**/.env.*.local)",
+      "Read(**/.env.dev*)",
+      "Read(**/.env.prod*)",
+      "Read(**/.env.stag*)",
+      "Read(**/.env.test*)",
+      "Read(**/*.pem)",
+      "Read(**/*.key)",
+      "Read(**/*.p12)",
+      "Read(**/*.pfx)",
+      "Read(**/*credentials*)",
+      "Read(**/*secret*)",
+      "Read(**/id_rsa)",
+      "Read(**/id_rsa.*)",
+      "Read(**/id_ed25519)",
+      "Read(**/id_ed25519.*)",
+      "Read(**/.npmrc)",
+      "Read(**/secrets/**)",
+      "Read(~/.ssh/**)",
+      "Read(~/.aws/**)",
+      "Read(~/.config/gcloud/**)",
+      "Read(~/.netrc)",
+      "Bash(rm -rf /*)",
+      "Bash(rm -rf ~*)",
+      "Bash(rm -rf $HOME*)",
+      "Bash(sudo *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git commit --no-verify*)",
+      "Bash(curl *)",
+      "Bash(wget *)",
+      "Bash(nc *)",
+      "Bash(ncat *)",
+      "Bash(telnet *)",
+      "Bash(scp *)",
+      "Bash(sftp *)",
+      "Bash(ftp *)"
+    ],
+    "ask": [
+      "Bash(rm -r *)",
+      "Bash(rm -rf *)",
+      "Bash(rm -fr *)",
+      "Bash(git push *)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean *)",
+      "Bash(gh pr create *)",
+      "Bash(gh pr merge *)",
+      "Bash(gh pr comment *)",
+      "Bash(gh issue create *)",
+      "Bash(gh issue comment *)",
+      "Bash(gh release *)",
+      "Bash(gh repo create *)",
+      "Bash(gh api *)",
+      "Bash(rsync *)",
+      "Bash(ssh *)",
+      "Bash(npm publish*)",
+      "Bash(vercel *)",
+      "Bash(netlify deploy*)",
+      "Bash(firebase deploy*)",
+      "Bash(supabase db push*)",
+      "Bash(terraform apply*)",
+      "Bash(kubectl *)",
+      "Edit(/.claude/settings.json)",
+      "Edit(/.codex/**)",
+      "Edit(/scripts/guardrail.py)"
+    ]
+  },
   "hooks": {
     "SessionStart": [
       {
@@ -9,6 +81,18 @@
             "type": "command",
             "command": "bash \"$CLAUDE_PROJECT_DIR/scripts/pull-latest.sh\"",
             "timeout": 30
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$CLAUDE_PROJECT_DIR/scripts/guardrail.py\"",
+            "timeout": 10
           }
         ]
       }
@@ -24,29 +108,5 @@
   },
   "enabledPlugins": {
     "common@company-ai-repo-template": true
-  },
-  "permissions": {
-    "deny": [
-      "Read(.env)",
-      "Read(.env.*)",
-      "Read(*.pem)",
-      "Read(*.key)",
-      "Read(*credentials*)",
-      "Read(*secret*)",
-      "Read(id_rsa)",
-      "Read(id_rsa.*)",
-      "Read(id_ed25519)",
-      "Read(id_ed25519.*)",
-      "Read(.npmrc)",
-      "Read(secrets/**)",
-      "Read(.aws/**)",
-      "Read(.ssh/**)",
-      "Bash(rm -rf *)",
-      "Bash(rm -rf*)",
-      "Bash(git push --force*)",
-      "Bash(git push -f*)",
-      "Bash(curl *)",
-      "Bash(wget *)"
-    ]
   }
 }

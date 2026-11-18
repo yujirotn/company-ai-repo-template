@@ -10,6 +10,18 @@
           }
         ]
       }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash|exec_command|mcp__.*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "python3 \"$(git rev-parse --show-toplevel)/scripts/guardrail.py\" --ask-as-block",
+            "timeout": 10
+          }
+        ]
+      }
     ]
   }
 }

@@ -1,0 +1,13 @@
+# SHO-SAN おすすめの Codex 設定（この書庫を開いた時だけ効く）
+# 1行ずつの説明・外したい時: docs/おすすめの設定.md
+# Codex は、この書庫を「信頼する」と答えた後にだけ、このファイルを読む。
+
+# 書けるのは、この書庫の中だけ（書庫の外・パソコンの大事な場所は書き換えない）
+sandbox_mode = "workspace-write"
+
+# 囲いの外に出る操作（ネットを使う・書庫の外を書き換える）の前に、人に確かめる
+approval_policy = "on-request"
+
+[sandbox_workspace_write]
+# AI が自分でネットにつなぐのは止める（必要な時は、確かめの画面で人が許す）
+network_access = false

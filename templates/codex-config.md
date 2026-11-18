@@ -1,83 +1,35 @@
 # Codexに同じ守りをかける方法
 
-`templates/settings.json` はClaude Code専用の設定です。Codex（OpenAIのAIコーディングツール）には
-別の仕組みで同じ趣旨の守り（秘密ファイルを読ませない・破壊的な操作をさせない）をかけます。
+この書庫には、Codex（OpenAIのAIコーディングツール）用の守りが最初から入っています。
+
+| ファイル | 何か |
+|---|---|
+| `.codex/config.toml` | 書けるのは書庫の中だけ（`sandbox_mode = "workspace-write"`）・囲いの外に出る前に人に確かめる（`approval_policy = "on-request"`）・AI が自分でネットにつながない |
+| `.codex/rules/default.rules` | 止めるコマンド（`forbidden`）・確かめるコマンド（`prompt`）の一覧 |
+| `.codex/hooks.json` | 開いた時に最新を取ってくる（`SessionStart`）・危ない操作を止める見張り番（`PreToolUse` → `scripts/guardrail.py`） |
+
+1行ずつの説明・外したい時は `docs/おすすめの設定.md` の「6. Codex の設定」を見てください。
 
 **`~/.codex/config.toml`（Codexを使う本人のパソコン全体の設定）は、このひな形からは書き換えません。**
 他のChatGPTアプリと共用しているファイルのため、ここを書き換えると他の用途に影響が出るおそれがあるからです。
-代わりに、**リポジトリ単位の設定ファイル**を使います。
+書庫の中の `.codex/` は、**この書庫だけ**に効きます。
 
-## 1. リポジトリ単位の設定ファイルを置く
+## 効くための条件
 
-このリポジトリの中に `.codex/config.toml` を作ると、**このリポジトリだけ**に適用される設定になります
-（2026-11-16 時点の公式ドキュメントで確認済み。本人のパソコン全体の設定は変更しません）。
+- Codex は、この書庫を「信頼する」と答えた後にだけ `.codex/` を読みます（信頼していないと、何を書いても効きません）
+- `.codex/hooks.json` は、起動時の「Hooks need review」で中身を確かめて信頼すると動きます。書き換えると、もう一度確認が出ます
+- `.codex/rules/` を書き換えた後は、Codex を開き直します
 
-```
-company-ai-repo-template/
-└── .codex/
-    └── config.toml   ← このリポジトリ専用の設定（必要なら作る。ひな形には同梱していない）
-```
+## 別の書庫に入れる時
 
-**注意**: Codexはこのプロジェクト単位の設定を、**そのプロジェクトを「信頼する」と答えた後**にだけ読み込みます
-（Codexを初めてこのフォルダで動かした時に出る確認への回答）。信頼していない状態では、ここに何を書いても反映されません。
+`.codex/config.toml`・`.codex/rules/default.rules`・`.codex/hooks.json`・`scripts/guardrail.py` の4つを、同じ場所に写します。
+`.gitignore` で `.codex/` を除外している場合は、この3つだけ書庫に入るように `!.codex/config.toml` などを足します。
 
-## 2. 設定の例（ベータ機能）
+## 限界（正直に書く）
 
-Codexの「permission profile（権限の名前付きセット）」という仕組みを使うと、ファイルごとに
-read（読む）・write（書く）・deny（拒否）を指定できます。**この機能は2026-11-16時点でベータ版**であり、
-将来変わる可能性があります。使う前に、手元のCodexのバージョンで実際に動くか確認してください。
-
-```toml
-# .codex/config.toml（このリポジトリ専用）
-default_permissions = "company-template"
-
-[permissions.company-template.filesystem]
-":minimal" = "read"
-
-[permissions.company-template.filesystem.":workspace_roots"]
-"." = "write"
-"**/.env" = "deny"
-"**/.env.*" = "deny"
-"**/*.key" = "deny"
-"**/*.pem" = "deny"
-"**/*credentials*" = "deny"
-"**/*secret*" = "deny"
-"**/.aws" = "deny"
-"**/.ssh" = "deny"
-
-[permissions.company-template.network]
-enabled = true
-```
-
-- `deny` は `write` より優先され、`write` は `read` より優先されます（具体的な指定が広い指定に勝ちます）。
-- ドメイン単位でネットワークを絞りたい場合は `features.network_proxy = true` を加え、
-  `[permissions.company-template.network.domains]` に `"送って良い先" = "allow"` のように書きます
-  （書かなければ全部許可のままなので、絞りたい場合は明示する）。
-- 古い書き方の `sandbox_mode`（`read-only` / `workspace-write` / `danger-full-access`）と、
-  この `permissions` の書き方は**どちらか一方だけ**を使います。両方書くと `sandbox_mode` が優先されてしまいます。
-
-## 3. その場限りで試す（`-c` フラグ）
-
-設定ファイルを置かずに、1回の実行だけ制限をかけたい場合は `-c` で上書きできます。
-
-```bash
-codex exec -c sandbox_mode="read-only" "このリポジトリの構成を説明して"
-```
-
-## 4. `rm -rf` ・`git push --force` の防止について
-
-Codexのpermission profileは「どのファイルを読み書きできるか」「ネットワークにつなげるか」を制御するもので、
-Claude Codeの `Bash(rm -rf *)` のような**コマンド文字列そのものの拒否**とは仕組みが異なります。
-`sandbox_mode` を `workspace-write` 以下に絞っておけば、このリポジトリの外のファイルを壊すことは防げますが、
-**リポジトリの中身を `rm -rf` で消す操作自体は、ファイルシステム権限だけでは防げません**
-（書く権限がある以上、書く操作で壊すこともできてしまうため）。
-本当に消されたくない場合は、Codexの承認モード（`approval_policy`）を `on-request` 以上の厳しさにして、
-破壊的な操作の前に必ず人の承認を挟む運用にしてください。
-
-## 5. この説明の限界（正直に書く）
-
-- ここに書いた `[permissions.*]` の構文は、公式ドキュメントの説明をもとに書いたものです。
-  **このひな形自体には `.codex/config.toml` を同梱していません**（本番のキーやパスは会社ごとに違うため）。
-  実際に使う前に、自分の手元のCodexで一度動作確認をしてください。
-- Claude CodeのBashルールと同じく、ガードレール（うっかり防止）であり、迂回しようとする行為まで防ぐ
-  ものではありません。
+- Codex の囲い（sandbox）は「どこを書けるか」「ネットにつなげるか」を決めるもので、書庫の中を `rm -rf` で消す操作までは防げません。
+  そのため、ルール（`prompt`）と見張り番で、まとめて消す操作の前に人を挟みます
+- ルール（`.codex/rules/`）は、2026-11 時点で公式が「試験中（experimental）で、変わることがある」としている仕組みです
+- 書庫の中の設定は、本人が書き換えれば外せます。会社として外せない形にしたい時は、管理者が
+  `/etc/codex/requirements.toml`（Windows は `%ProgramData%\OpenAI\Codex\requirements.toml`）に書きます
+- ガードレール（うっかり防止）であり、迂回しようとする行為まで防ぐものではありません
