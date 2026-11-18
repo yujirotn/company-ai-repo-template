@@ -25,6 +25,11 @@ id_ed25519.*
 !.codex/config.toml
 !.codex/rules/
 
+# 仕事の本物のデータ（取り込んだメール・チャットなど）は書庫に入れない。練習用の架空データは practice-data/ に置けば共有できる
+projects/*/data/
+# 点検（harness-check）の出力は人ごとの控えなので共有しない
+harness-check-output/
+
 # OSゴミ
 .DS_Store
 Thumbs.db
