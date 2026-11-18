@@ -89,6 +89,7 @@ company-ai-repo-template/
 ├── plugins/
 │   ├── common/                … 全社共通の道具（仕様書から始める・書庫に保存する・広報物を作る）
 │   ├── sho-san/               … 見本の道具13本（「SHO-SAN ではこう使っている」。仕事の進め方・資料作成・画面づくり）
+│   ├── ai-dev-steps/          … 開発の手順 1〜9 を1段1スキルで進める道具（入口は dev-start）
 │   └── _部署のひな形/          … 部署用の道具を作るときに複製する型
 ├── members/
 │   └── _ひな形/                … メンバーの名札（個人の書庫の場所・見せたい試作）を作るときに複製する型
@@ -206,9 +207,11 @@ claude plugin install common@company-ai-repo-template --scope user  # 自分の�
 | `/sho-san:handoff` | 作業の区切りで README に引き継ぎを残し、次の会話に貼れる「再開の文」を出す |
 | `/sho-san:nihongo` | 人に出す日本語（メール・お知らせ・資料など）を自然に整える |
 | `/sho-san:org-rebuild` | AI の作業環境（ハーネス）を点検し、1問ずつ決めながら作り直す。研修向けの30分版（点検 → グリル → 決定ログ）もある |
+| `/ai-dev-steps:dev-start` | 道具やサービスを作る時の「開発の手順 1〜9」で、今どの段か・次に何をするかを教える（各段は `dev-concept`〜`dev-attack`。社内の道具なら 5 価値の検証・7 価格は飛ばす） |
 
 `sho-san` は「SHO-SAN ではこう使っている」の見本です。出典とライセンスは `plugins/sho-san/README.md` を参照してください。
-使わない場合は、`marketplace.json` の `sho-san` の行とフォルダを消してかまいません。
+`ai-dev-steps` は開発の手順 1〜9 の道具です（出典は `plugins/ai-dev-steps/NOTICE.md`）。Codex では `$ai-dev-steps:dev-start` で呼びます。
+使わない場合は、`marketplace.json` の `sho-san`・`ai-dev-steps` の行とフォルダを消してかまいません。
 
 該当する言葉を言うだけ（例:「新しい仕事を始めたい」「書庫に保存して」）でも、AIが判断して起動します。
 

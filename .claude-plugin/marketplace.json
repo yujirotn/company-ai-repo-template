@@ -14,6 +14,11 @@
       "name": "sho-san",
       "source": "./plugins/sho-san",
       "description": "「SHO-SAN ではこう使っている」の見本13本。仕事の進め方・資料作成・画面づくりの3つのまとまり。要らなければこの行とフォルダを消してよい。"
+    },
+    {
+      "name": "ai-dev-steps",
+      "source": "./plugins/ai-dev-steps",
+      "description": "開発の手順 1〜9（コンセプト・仕様・画面・試作・価値の検証・本番の実装・価格・デザイン・攻撃して直す）を1段1スキルで進める。入口は dev-start。社内で使う道具なら 5 と 7 は飛ばしてよい。"
     }
   ]
 }

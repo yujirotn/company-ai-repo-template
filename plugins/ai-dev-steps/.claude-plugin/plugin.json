@@ -1,0 +1,20 @@
+{
+  "name": "ai-dev-steps",
+  "displayName": "開発の手順 1〜9",
+  "version": "0.1.0",
+  "description": "AI と一緒に道具やサービスを作る時の手順 1〜9（コンセプト・仕様・画面・試作・価値の検証・本番の実装・価格・デザイン・攻撃して直す）を、1段1スキルで進める。入口の dev-start が docs/ を見て「今どの段か・次は何か」を案内する。社内で使う道具なら 5 と 7 は飛ばしてよい。Claude Code と Codex のどちらでも使える。",
+  "author": {
+    "name": "Template Maintainers"
+  },
+  "license": "MIT",
+  "keywords": [
+    "development-steps",
+    "spec-driven",
+    "wireframe",
+    "prototype",
+    "validation",
+    "pricing",
+    "design-system",
+    "security"
+  ]
+}
