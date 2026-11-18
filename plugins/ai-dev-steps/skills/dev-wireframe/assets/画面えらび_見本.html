@@ -1,0 +1,295 @@
+<!--
+  画面えらびの見本（dev-wireframe 段3）
+  使い方: この写しを docs/wireframes/画面えらび.html に置き、次の3か所だけを仕事に合わせて書き換える。
+    1. <title> と <h1> の下の仕事の名前（いまは見本の「備品の貸し出し記録」）
+    2. 「聞き取り」の4つの欄の初期値（docs/00-コンセプト.md・01-要件.md から入れる）
+    3. スクリプトの CATS（論点ごとに q=質問・items=3案。各案は id・t=名前・why=考え方と向く人・h=画面の見本の HTML）
+  画面の見本は .m の部品（top・body・tiles・li・pill・sbtn・table・cards・cols・tabs・side・sheet など）で組む。
+  それ以外の CSS・流れ・結果の文の作り方は変えない。外のファイルは読み込まない（書体の読み込みは消してもよい）。
+-->
+<title>画面えらび</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700&family=Inter:wght@500;700&display=swap">
+<style>
+/* 1列の進行: ヒアリング → 画面のデモをめくって選ぶ → AIに渡す文。デモは灰色の線画、強調は1色 */
+:root{
+  --bg:#F6F7F9; --panel:#FFFFFF; --fg:#1B2430; --sub:#5B6676; --line:#D9DEE5;
+  --accent:#2F5BD3; --like:#1E8C5A; --nope:#9AA3AF; --super:#C9821A;
+  --m-bg:#FFFFFF; --m-ink:#2A323D; --m-mid:#C9CFD7; --m-soft:#EEF1F4;
+  --font:"Noto Sans JP",-apple-system,"Hiragino Kaku Gothic ProN",Meiryo,sans-serif;
+  --num:"Inter","Noto Sans JP",sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#12161C; --panel:#1A2029; --fg:#E7EBF0; --sub:#A3ADBA; --line:#2C3542;
+  --accent:#7C9CF0; --like:#4CC08A; --nope:#6D7684; --super:#E0A64A;
+  --m-bg:#20262F; --m-ink:#DDE3EA; --m-mid:#46505E; --m-soft:#2A313B; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12161C; --panel:#1A2029; --fg:#E7EBF0; --sub:#A3ADBA; --line:#2C3542;
+  --accent:#7C9CF0; --like:#4CC08A; --nope:#6D7684; --super:#E0A64A;
+  --m-bg:#20262F; --m-ink:#DDE3EA; --m-mid:#46505E; --m-soft:#2A313B; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--fg);font-family:var(--font);font-size:15px;line-height:1.7;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:24px 48px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header h1{font-size:24px;margin:0;line-height:1.4;text-wrap:balance}
+header p{margin:4px 0 0;color:var(--sub);font-size:14px}
+.steps{display:flex;gap:8px;font-size:12px;color:var(--sub);letter-spacing:.04em}
+.steps span{padding:2px 10px;border:1px solid var(--line);border-radius:999px}
+.steps span.on{border-color:var(--accent);color:var(--accent);font-weight:700}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:20px}
+label{display:block;font-weight:700;font-size:14px;margin-bottom:4px}
+.hint{font-size:12px;color:var(--sub);font-weight:400}
+input[type=text],textarea,select{width:100%;font:inherit;font-size:15px;color:var(--fg);background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:10px 12px}
+textarea{min-height:64px;resize:vertical}
+.field{display:flex;flex-direction:column;gap:4px}
+.form{display:flex;flex-direction:column;gap:16px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips input{position:absolute;opacity:0;pointer-events:none}
+.chips label{font-weight:500;margin:0;padding:6px 14px;border:1px solid var(--line);border-radius:999px;cursor:pointer;font-size:14px}
+.chips input:checked+label{border-color:var(--accent);color:var(--accent);background:color-mix(in srgb,var(--accent) 10%,transparent)}
+.chips input:focus-visible+label{outline:2px solid var(--accent);outline-offset:2px}
+.btn{font:inherit;font-weight:700;font-size:15px;border-radius:999px;padding:12px 20px;border:1px solid var(--line);background:var(--panel);color:var(--fg);cursor:pointer}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.ex{font-size:12px;color:var(--sub)}
+
+/* 横並びで選ぶ画面 */
+.wrap{max-width:1040px}
+#s1,#s3{max-width:640px;width:100%;margin-inline:auto}
+.cat{display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}
+.cat b{font-size:18px}
+.cat span{font-family:var(--num);font-size:13px;color:var(--sub);font-variant-numeric:tabular-nums}
+.q{font-size:20px;font-weight:700;margin:0;line-height:1.4;text-wrap:balance}
+.bar{height:4px;background:var(--line);border-radius:2px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s}
+.opts{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}
+.opt{position:relative;border:2px solid var(--line);border-radius:14px;background:var(--panel);padding:12px;display:flex;flex-direction:column;gap:10px;cursor:pointer;text-align:left;font:inherit;color:inherit}
+.opt:hover{border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.opt:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+.opt[aria-pressed="true"]{border-color:var(--accent);box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 18%,transparent)}
+.opt .pick{align-self:flex-start;font-size:12px;font-weight:700;padding:2px 10px;border-radius:999px;border:1px solid var(--line);color:var(--sub);background:var(--panel)}
+.opt[aria-pressed="true"] .pick{background:var(--accent);border-color:var(--accent);color:#fff}
+.opt .name{font-weight:700;font-size:15px}
+.opt .why{font-size:13px;color:var(--sub);margin:0}
+.phone{height:440px;width:100%;max-width:240px;align-self:center;border:6px solid var(--m-ink);border-radius:26px;background:var(--m-bg);overflow:hidden;display:flex;flex-direction:column;position:relative}
+.foot{display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:space-between}
+.memo{display:flex;gap:8px;flex:1;min-width:240px}
+.memo input{flex:1}
+.btn[disabled]{opacity:.45;cursor:default}
+@media (max-width:760px){
+  .opts{grid-template-columns:none;grid-auto-flow:column;grid-auto-columns:78%;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px}
+  .opt{scroll-snap-align:start}
+  .swipehint{display:block!important}
+}
+/* 画面のデモ（線画） */
+.m{font-size:10px;color:var(--m-ink);display:flex;flex-direction:column;height:100%;font-family:var(--font)}
+.m .top{padding:10px 10px 8px;font-weight:700;font-size:12px;border-bottom:1px solid var(--m-mid);display:flex;justify-content:space-between;align-items:center}
+.m .body{flex:1;padding:8px 10px;display:flex;flex-direction:column;gap:6px;overflow:hidden}
+.m .tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:4px}
+.m .tile{border:1px solid var(--m-mid);border-radius:6px;padding:4px}
+.m .tile b{display:block;font-family:var(--num);font-size:15px}
+.m .tile.hot{border-color:var(--accent);color:var(--accent)}
+.m .search{border:1px solid var(--m-mid);border-radius:6px;padding:5px 6px;color:var(--sub)}
+.m .search.big{padding:9px 8px;font-size:11px;border-width:2px;border-color:var(--m-ink);color:var(--m-ink)}
+.m .li{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--m-soft);padding:5px 0;gap:4px}
+.m .pill{font-size:9px;padding:1px 6px;border-radius:999px;border:1px solid var(--m-mid);white-space:nowrap}
+.m .pill.out{border-color:var(--accent);color:var(--accent)}
+.m .pill.late{background:var(--accent);border-color:var(--accent);color:#fff}
+.m .sbtn{font-size:9px;padding:3px 8px;border-radius:5px;border:1px solid var(--m-ink);white-space:nowrap}
+.m .sbtn.fill{background:var(--m-ink);color:var(--m-bg)}
+.m table{width:100%;border-collapse:collapse;font-size:9px}
+.m th,.m td{border-bottom:1px solid var(--m-soft);padding:4px 2px;text-align:left}
+.m th{color:var(--sub);font-weight:500}
+.m .cards{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.m .c{border:1px solid var(--m-mid);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:3px}
+.m .ph{height:34px;border-radius:5px;background:var(--m-soft)}
+.m .cols{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;flex:1}
+.m .col{background:var(--m-soft);border-radius:6px;padding:4px;display:flex;flex-direction:column;gap:4px}
+.m .col h6{margin:0;font-size:9px}
+.m .k{background:var(--m-bg);border-radius:4px;padding:3px;font-size:8.5px;border:1px solid var(--m-mid)}
+.m .tabs{display:grid;grid-template-columns:repeat(4,1fr);border-top:1px solid var(--m-mid);font-size:8.5px;text-align:center}
+.m .tabs div{padding:6px 0 8px}
+.m .tabs .on{color:var(--accent);font-weight:700}
+.m .ic{display:block;width:14px;height:14px;margin:0 auto 2px;border:1.5px solid currentColor;border-radius:4px}
+.m .side{display:flex;flex:1;min-height:0}
+.m .nav{width:62px;border-right:1px solid var(--m-mid);padding:8px 6px;display:flex;flex-direction:column;gap:6px;font-size:9px}
+.m .nav .on{color:var(--accent);font-weight:700}
+.m .sheet{position:absolute;left:0;right:0;bottom:0;background:var(--m-bg);border-top:1px solid var(--m-mid);border-radius:12px 12px 0 0;padding:10px;display:flex;flex-direction:column;gap:6px;box-shadow:0 -6px 16px rgba(0,0,0,.12)}
+.m .dim{position:absolute;inset:0;background:rgba(20,26,34,.35)}
+.m .seg{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--m-mid);border-radius:6px;overflow:hidden;text-align:center}
+.m .seg div{padding:5px 0}
+.m .seg .on{background:var(--m-ink);color:var(--m-bg)}
+.m .scan{flex:1;border-radius:10px;background:var(--m-soft);display:grid;place-items:center;position:relative}
+.m .scan i{width:90px;height:90px;border:2px dashed var(--m-ink);border-radius:8px}
+.m .mine{border:1.5px solid var(--accent);border-radius:8px;padding:6px;display:flex;flex-direction:column;gap:4px}
+.m .mine h6{margin:0;font-size:10px;color:var(--accent)}
+.m .muted{color:var(--sub)}
+
+/* 結果 */
+.res{display:flex;flex-direction:column;gap:12px}
+.res h3{margin:0;font-size:15px}
+.res ul{margin:0;padding-left:1.2em}
+.res .tag{font-size:11px;font-weight:700;padding:1px 8px;border-radius:999px;margin-left:6px}
+.tag.s{color:var(--super);border:1px solid var(--super)} .tag.y{color:var(--like);border:1px solid var(--like)}
+pre.out{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px solid var(--line);border-radius:8px;padding:12px;font-size:13px;margin:0;font-family:var(--font)}
+.toast{font-size:13px;color:var(--like);min-height:1.5em}
+@media (prefers-reduced-motion:reduce){.card.fly,.bar i{transition:none}}
+@media (max-width:420px){.deck{height:520px}.phone{width:220px}}
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="steps" id="steps"><span class="on">1 聞き取り</span><span>2 画面をえらぶ</span><span>3 AIに渡す</span></div>
+    <h1 style="margin-top:12px">画面えらび<br><span style="font-size:16px;color:var(--sub)">備品の貸し出し記録</span></h1>
+    <p>論点ごとに、実際の画面の見本を3案並べます。使いたい案を1つ選んでください。</p>
+  </header>
+
+  <!-- 1 聞き取り -->
+  <section class="panel" id="s1">
+    <form class="form" id="hearing">
+      <div class="field">
+        <label for="who">誰が使いますか <span class="hint">（例が入っています。直してください）</span></label>
+        <input type="text" id="who" value="総務2人（管理）と、借りる社員30人">
+      </div>
+      <div class="field">
+        <label>主に何で開きますか</label>
+        <div class="chips">
+          <input type="radio" name="dev" id="d1" value="スマホ" checked><label for="d1">スマホ</label>
+          <input type="radio" name="dev" id="d2" value="パソコン"><label for="d2">パソコン</label>
+          <input type="radio" name="dev" id="d3" value="両方"><label for="d3">両方</label>
+        </div>
+      </div>
+      <div class="field">
+        <label for="job">いちばん大事な作業は何ですか</label>
+        <input type="text" id="job" value="借りる・返すを10秒で済ませる">
+      </div>
+      <div class="field">
+        <label for="ng">これだけは嫌だ、ということ <span class="hint">（なくても可）</span></label>
+        <textarea id="ng">ボタンや項目が多くて、どこを押せばいいか迷う画面</textarea>
+      </div>
+      <div class="row"><button class="btn primary" type="submit">画面をえらび始める</button><span class="ex">4問・3分ほど</span></div>
+    </form>
+  </section>
+
+  <!-- 2 横並びで選ぶ -->
+  <section id="s2" hidden>
+    <div class="panel" style="display:flex;flex-direction:column;gap:16px">
+      <div class="cat"><b id="catName"></b><span id="count"></span></div>
+      <div class="bar"><i id="prog"></i></div>
+      <p class="q" id="qText"></p>
+      <p class="ex swipehint" style="display:none;margin:0">横にずらすと3案を見比べられます</p>
+      <div class="opts" id="opts"></div>
+      <div class="foot">
+        <div class="memo"><input type="text" id="memo" placeholder="ひとこと（例: Aの数字とCの自分の分を合わせたい）" aria-label="この論点へのひとこと"></div>
+        <div class="row">
+          <button class="btn" id="bBack" type="button">前へ</button>
+          <button class="btn" id="bNone" type="button">どれも違う</button>
+          <button class="btn primary" id="bNext" type="button" disabled>これにして次へ</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 3 結果 -->
+  <section class="panel" id="s3" hidden>
+    <div class="res" id="res"></div>
+  </section>
+</div>
+
+<script>
+(function(){
+const ICON='<i class="ic"></i>';
+const rows=[["ノートPC 03","利用可",""],["プロジェクター 01","期限超過","late"],["カメラ 02","貸出中","out"],["マイク 01","利用可",""],["モニター 02","利用可",""]];
+const pill=(s,c)=>`<span class="pill ${c}">${s}</span>`;
+const list=(btn)=>rows.map(r=>`<div class="li"><span>${r[0]}</span>${pill(r[1],r[2])}${btn?`<span class="sbtn">${r[1]==="利用可"?"借りる":"返す"}</span>`:""}</div>`).join("");
+const tabs=on=>`<div class="tabs">${["ホーム","一覧","借りた物","設定"].map((t,i)=>`<div class="${i===on?"on":""}">${ICON}${t}</div>`).join("")}</div>`;
+const top=(t,r="")=>`<div class="top"><span>${t}</span><span class="muted">${r}</span></div>`;
+
+const CATS=[
+ {id:"home",name:"最初に開いた画面",q:"開いた時に、まず何が見えるとよいですか",items:[
+  {id:"A",t:"数字の要約が上",why:"利用可・貸出中・期限超過の数が先に見える。管理する人向け",
+   h:`<div class="m">${top("備品の貸し出し")}<div class="body"><div class="tiles"><div class="tile">利用可<b>17</b></div><div class="tile">貸出中<b>2</b></div><div class="tile hot">期限超過<b>1</b></div></div><div class="search">備品を検索</div>${list(false)}</div>${tabs(0)}</div>`},
+  {id:"B",t:"大きな検索が上",why:"借りたい物の名前をすぐ打てる。借りる人向け",
+   h:`<div class="m">${top("備品の貸し出し")}<div class="body"><div class="search big">何を借りますか？（例: プロジェクター）</div><div class="muted">よく借りる物</div><div class="chips" style="gap:4px"><span class="pill">プロジェクター</span><span class="pill">ノートPC</span><span class="pill">カメラ</span></div>${list(false)}</div>${tabs(0)}</div>`},
+  {id:"C",t:"自分が借りている物が上",why:"返し忘れが一番の困りごとなら、自分の分を先に見せる",
+   h:`<div class="m">${top("備品の貸し出し","社員03")}<div class="body"><div class="mine"><h6>あなたが借りている物</h6><div class="li"><span>カメラ 02</span><span>あと2日</span><span class="sbtn fill">返す</span></div></div><div class="search">ほかの備品を探す</div>${list(false)}</div>${tabs(0)}</div>`}
+ ]},
+ {id:"list",name:"一覧の見せ方",q:"備品がたくさんある時、どう並ぶと探しやすいですか",items:[
+  {id:"A",t:"表で並べる",why:"たくさんを一度に見比べられる。パソコンで管理する時に強い",
+   h:`<div class="m">${top("備品一覧","20点")}<div class="body"><div class="search">絞り込み</div><table><tr><th>名前</th><th>状態</th><th>場所</th><th>期限</th></tr>${rows.map(r=>`<tr><td>${r[0]}</td><td>${pill(r[1],r[2])}</td><td>${r[2]?"社員":"総務棚"}</td><td>${r[2]?"11/20":"—"}</td></tr>`).join("")}</table></div>${tabs(1)}</div>`},
+  {id:"B",t:"写真つきのカード",why:"見た目で探せる。似た名前の備品が多い時に迷いにくい",
+   h:`<div class="m">${top("備品一覧","20点")}<div class="body"><div class="cards">${rows.slice(0,4).map(r=>`<div class="c"><div class="ph"></div><b>${r[0]}</b>${pill(r[1],r[2])}</div>`).join("")}</div></div>${tabs(1)}</div>`},
+  {id:"C",t:"状態ごとの列",why:"利用可・貸出中・期限超過が列で分かれる。今の状況が一目で分かる",
+   h:`<div class="m">${top("備品の状況")}<div class="body"><div class="cols"><div class="col"><h6>利用可</h6><div class="k">ノートPC 03</div><div class="k">マイク 01</div><div class="k">モニター 02</div></div><div class="col"><h6>貸出中</h6><div class="k">カメラ 02</div></div><div class="col"><h6 style="color:var(--accent)">期限超過</h6><div class="k" style="border-color:var(--accent)">プロジェクター 01</div></div></div></div>${tabs(1)}</div>`}
+ ]},
+ {id:"borrow",name:"借りる時の操作",q:"「借りる」を押したあと、どう進むとよいですか",items:[
+  {id:"A",t:"確認の画面をはさむ",why:"借りる人・返す日を確かめてから決定。間違いが減る",
+   h:`<div class="m">${top("借りる")}<div class="body"><b style="font-size:12px">プロジェクター 02</b><div class="li"><span class="muted">借りる人</span><span>社員03</span></div><div class="li"><span class="muted">返す日</span><span>11/21（木）</span></div><div class="li"><span class="muted">使う場所</span><span>会議室B</span></div><div style="flex:1"></div><span class="sbtn fill" style="text-align:center;padding:8px">この内容で借りる</span><span class="sbtn" style="text-align:center;padding:8px">戻る</span></div></div>`},
+  {id:"B",t:"その場で返す日を選ぶ",why:"一覧の上に小さな画面が出て、日を選ぶだけ。最短で終わる",
+   h:`<div class="m">${top("備品一覧")}<div class="body">${list(true)}</div>${tabs(1)}<div class="dim"></div><div class="sheet"><b style="font-size:11px">プロジェクター 02 を借りる</b><div class="muted">返す日</div><div class="seg"><div>今日</div><div class="on">明日</div><div>3日後</div></div><span class="sbtn fill" style="text-align:center;padding:8px">借りる</span></div></div>`},
+  {id:"C",t:"備品のラベルを読み取る",why:"備品に貼ったコードをスマホで読むだけ。探す手間がない",
+   h:`<div class="m">${top("読み取って借りる")}<div class="body"><div class="scan"><i></i></div><div class="muted" style="text-align:center">備品のラベルを枠に入れてください</div><span class="sbtn" style="text-align:center;padding:8px">一覧から選ぶ</span></div>${tabs(0)}</div>`}
+ ]},
+ {id:"nav",name:"画面の行き来",q:"ほかの画面へは、どう移るのが使いやすいですか",items:[
+  {id:"A",t:"下にタブ",why:"スマホの親指で届く。よく使うアプリと同じ形",
+   h:`<div class="m">${top("借りた物")}<div class="body"><div class="mine"><h6>あなたが借りている物</h6><div class="li"><span>カメラ 02</span><span>11/22まで</span></div></div></div>${tabs(2)}</div>`},
+  {id:"B",t:"左にメニュー",why:"項目が増えても並べられる。パソコンで管理する時に向く",
+   h:`<div class="m">${top("備品の貸し出し")}<div class="side"><div class="nav"><span class="on">ホーム</span><span>一覧</span><span>借りた物</span><span>期限超過</span><span>社員</span><span>設定</span></div><div class="body">${list(false)}</div></div></div>`},
+  {id:"C",t:"1画面だけ",why:"移動しない。検索・一覧・借りる・返すが全部この画面",
+   h:`<div class="m">${top("備品の貸し出し")}<div class="body"><div class="search big">備品を検索</div>${list(true)}</div></div>`}
+ ]}
+];
+
+
+const $=id=>document.getElementById(id);
+const S={i:0,ans:[],hear:{}};
+const stepsEl=$("steps");
+function setStep(n){[...stepsEl.children].forEach((x,i)=>x.classList.toggle("on",i===n-1));$("s1").hidden=n!==1;$("s2").hidden=n!==2;$("s3").hidden=n!==3}
+
+$("hearing").addEventListener("submit",e=>{e.preventDefault();
+  S.hear={who:$("who").value.trim(),dev:(document.querySelector('input[name=dev]:checked')||{}).value,job:$("job").value.trim(),ng:$("ng").value.trim()};
+  S.i=0;S.ans=[];setStep(2);render();window.scrollTo({top:0,behavior:"smooth"})});
+
+function render(){
+  if(S.i>=CATS.length){showResult();return}
+  const cat=CATS[S.i];const cur=S.ans[S.i]||{};
+  $("catName").textContent=`${S.i+1}/${CATS.length}　${cat.name}`;$("count").textContent=`残り ${CATS.length-S.i} 問`;
+  $("qText").textContent=cat.q;$("prog").style.width=(S.i/CATS.length*100)+"%";
+  $("opts").innerHTML=cat.items.map(it=>`<button type="button" class="opt" data-id="${it.id}" aria-pressed="${cur.pick===it.id}"><div class="phone" aria-label="画面の見本: ${it.t}">${it.h}</div><div style="display:flex;flex-direction:column;gap:4px"><span class="pick">${cur.pick===it.id?"選んだ":"これにする"}</span><div class="name">案${it.id}　${it.t}</div><p class="why">${it.why}</p></div></button>`).join("");
+  $("opts").scrollLeft=0;
+  $("opts").querySelectorAll(".opt").forEach(b=>b.onclick=()=>{S.ans[S.i]={...(S.ans[S.i]||{}),pick:b.dataset.id};
+    $("opts").querySelectorAll(".opt").forEach(o=>{const on=o===b;o.setAttribute("aria-pressed",on);o.querySelector(".pick").textContent=on?"選んだ":"これにする"});
+    $("bNext").disabled=false});
+  $("memo").value=cur.memo||"";$("bBack").disabled=S.i===0;$("bNext").disabled=!cur.pick;
+}
+$("memo").addEventListener("input",()=>{S.ans[S.i]={...(S.ans[S.i]||{}),memo:$("memo").value.trim()}});
+$("bNext").onclick=()=>{if(!(S.ans[S.i]||{}).pick)return;S.i++;render();window.scrollTo({top:0,behavior:"smooth"})};
+$("bNone").onclick=()=>{S.ans[S.i]={...(S.ans[S.i]||{}),pick:"none"};S.i++;render();window.scrollTo({top:0,behavior:"smooth"})};
+$("bBack").onclick=()=>{if(S.i>0){S.i--;render()}};
+
+function showResult(){setStep(3);$("prog").style.width="100%";
+  const lines=[];const html=[];
+  lines.push("画面えらびの結果です。これをもとに docs/02-画面.md を書き、選んだ形で画面案を作ってください。");
+  lines.push("");lines.push("【聞き取り】");
+  lines.push(`- 使う人: ${S.hear.who||"（未記入）"}`);lines.push(`- 主に開く端末: ${S.hear.dev||"（未記入）"}`);
+  lines.push(`- いちばん大事な作業: ${S.hear.job||"（未記入）"}`);lines.push(`- 嫌なこと: ${S.hear.ng||"なし"}`);
+  lines.push("");lines.push("【選んだ画面】");
+  html.push(`<h3>えらんだ画面</h3>`);
+  CATS.forEach((cat,k)=>{const r=S.ans[k]||{};const it=cat.items.find(x=>x.id===r.pick);
+    const sel=it?`案${it.id} ${it.t}`:"どれも違う（作る前に聞き直す）";
+    lines.push(`- ${cat.name}: ${sel}${r.memo?`（ひとこと: ${r.memo}）`:""}`);
+    lines.push(`  ほかの案: ${cat.items.filter(x=>x!==it).map(x=>`案${x.id} ${x.t}`).join("／")}`);
+    html.push(`<div><b>${cat.name}</b><ul><li>${sel}${r.memo?`<br><span class="ex">${r.memo.replace(/</g,"&lt;")}</span>`:""}</li></ul></div>`)});
+  lines.push("");lines.push("「どれも違う」の所と、ひとことで組み合わせを頼んだ所は、作る前に1問ずつ聞いてください。");
+  const txt=lines.join("\n");
+  html.push(`<h3>AIに渡す文</h3><p class="ex" style="margin:0">コピーして、Claude や ChatGPT の会話に貼ってください。</p><pre class="out" id="out"></pre><div class="row"><button class="btn primary" id="bCopy" type="button">文をコピー</button><button class="btn" id="bRe" type="button">もう一度えらぶ</button></div><div class="toast" id="toast" aria-live="polite"></div>`);
+  $("res").innerHTML=html.join("");$("out").textContent=txt;
+  $("bCopy").onclick=()=>{const done=()=>$("toast").textContent="コピーしました";
+    try{navigator.clipboard.writeText(txt).then(done,sel)}catch(e){sel()}
+    function sel(){const r=document.createRange();r.selectNodeContents($("out"));const s=getSelection();s.removeAllRanges();s.addRange(r);$("toast").textContent="文を選んだ状態にしました。コピーしてください"}};
+  $("bRe").onclick=()=>{S.i=0;S.ans=[];setStep(2);render()};
+}
+})();
+</script>
