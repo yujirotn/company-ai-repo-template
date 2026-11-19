@@ -1,4 +1,4 @@
-name: スキル一覧を更新
+name: ハーネス部品一覧を更新
 
 on:
   push:
@@ -33,7 +33,7 @@ jobs:
               exit 0
             fi
             git add -- CATALOG.md
-            git commit -m 'スキル一覧を更新'
+            git commit -m 'ハーネス部品一覧を更新'
             if git push origin HEAD:refs/heads/main; then
               exit 0
             fi

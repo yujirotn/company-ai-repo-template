@@ -1,0 +1,9 @@
+{
+  "name": "document-toolbox",
+  "description": "読んだ文書から次にやることを短く整理するスキルをひとまとめにする。",
+  "version": "0.1.0",
+  "license": "MIT",
+  "author": {
+    "name": "Template Maintainers"
+  }
+}
